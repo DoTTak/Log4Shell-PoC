@@ -17,6 +17,13 @@ Log4Shell PoC with RMI, LDAP
 
 # PoC
 
+## 0. 시연영상
+> 아래 사진을 클릭하면 PoC 시연 영상으로 이동됩니다. <br>
+> 또는, [https://youtu.be/hd-EQSkEjpM](https://youtu.be/hd-EQSkEjpM) 로 직접 확인하실 수 있습니다.
+
+[![Log4Shell PoC with RMI, LDAP](./images/img-001.png)](https://youtu.be/hd-EQSkEjpM)
+
+
 ## 1. Vulnerable Application 셋팅 및 실행
 
 ### 빌드 및 실행
