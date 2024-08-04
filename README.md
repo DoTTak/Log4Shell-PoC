@@ -5,15 +5,17 @@ Log4Shell PoC with RMI, LDAP
 
 ### 빌드 및 실행
 
-1. [DoTTak/Log4Shell-PoC](https://github.com/DoTTak/Log4Shell-PoC) 저장소로 부터 코드를 내려받는다.
+1. [DoTTak/Log4Shell-PoC](https://github.com/DoTTak/Log4Shell-PoC) 저장소로 부터 코드를 내려받은 뒤, 해당 프로젝트로 이동한다.
     
     ```bash
     git clone https://github.com/DoTTak/Log4Shell-PoC.git
+    cd Log4Shell-PoC
     ```
     
-2. 이후 `Dockerfile` 을 빌드하여 도커 이미지를 생성한다.
+2. 이후 `vulnerable-application` 폴더로 이동한 뒤, `Dockerfile` 을 빌드하여 도커 이미지를 생성한다.
     
     ```bash
+    cd vulnerable-application
     docker build --platform linux/amd64 -t log4shell-poc-app .
     ```
     
@@ -23,7 +25,7 @@ Log4Shell PoC with RMI, LDAP
     > 
     
     ```bash
-    docker run --platform=linux/amd64 --add-host=host.docker.internal:host-gateway --name log4shell-poc-app -p 7777:7777 log4shell-poc-app
+    docker run --rm --platform=linux/amd64 --add-host=host.docker.internal:host-gateway --name log4shell-poc-app -p 7777:7777 log4shell-poc-app
     ```
 
 ### 사용법
