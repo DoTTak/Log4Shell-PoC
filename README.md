@@ -86,7 +86,7 @@ Log4Shell PoC with RMI, LDAP
 2. 그 다음 해당 경로를 악성 자바 객체를 호스팅하기 위해 아래의 명령어를 통해 웹 서버를 실행한다.
 
     ```bash
-    python3 -m http.server
+    python3 -m http.server 8888
     ```
 
 ## 5. Exploit 수행
