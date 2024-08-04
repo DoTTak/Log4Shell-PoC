@@ -77,7 +77,13 @@ Log4Shell PoC with RMI, LDAP
     docker-compose up -d
     ```
 
-2. 위 명령어가 정상적으로 수행됐으면 [http://localhost:8080](http://localhost:8080)를 브라우저를 통해 접속한다.
+    >  위 명령어가 정상적으로 수행됐으면 [http://localhost:8080](http://localhost:8080)를 브라우저를 통해 웹 UI로 접속할 수 있다.
+
+2. LDAP 서버로 들어오는 요청을 확인하기 위해 아래의 명령어를 입력하여 로그 정보를 출력한다.
+    
+    ```bash
+    docker container logs openldap -f
+    ```
 
 ## 4. Exploit Server 셋팅 및 실행
 
@@ -96,7 +102,17 @@ Log4Shell PoC with RMI, LDAP
     python3 -m http.server 8888
     ```
 
-## 5. Exploit 수행
+## 5. 리버스 셸 준비
+
+1. 호스트 셸에서 아래의 명령어를 입력하여 `9999` 포트로 Listen
+
+    > Exploit 이후, 연결이 끊어질 수 있다. 이에 연결이 끊긴 경우 아래 명령어를 재입력 한다.
+    
+    ```bash
+    ls -lv 9999
+    ```
+
+## 6. Exploit 수행
 
 > Exploit은 Host에서 Vulnerable Application으로 요청을 수행한다.
 
