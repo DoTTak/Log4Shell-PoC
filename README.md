@@ -1,5 +1,5 @@
 # Log4Shell-PoC
-Log4Shell PoC with RMI, LDAP
+Log4Shell PoC with RMI, openLDAP
 
 ---- 
 
@@ -109,7 +109,7 @@ Log4Shell PoC with RMI, LDAP
     > Exploit 이후, 연결이 끊어질 수 있다. 이에 연결이 끊긴 경우 아래 명령어를 재입력 한다.
     
     ```bash
-    ls -lv 9999
+    nc -lv 9999
     ```
 
 ## 6. Exploit 수행
